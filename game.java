@@ -2,20 +2,15 @@ package ttt;
 
 import java.util.Scanner; 
 
+
 interface board
 {
-        public boolean insert(int x, int y, char symbol);
+    public boolean insert(int x, int y, char symbol);
 	 public boolean win();	
 	 public boolean is_Full();
 	 public void view();
 } 
 
-interface player
-{
-    public void input(int[] position);
-    public int get_x();
-    public int get_y();
-}
 
 class ttt_board implements board
 {
@@ -30,12 +25,7 @@ class ttt_board implements board
 
 	public boolean insert(int x, int y, char symbol)
 	{
-		if(symbol != 'X' || symbol != 'O')
-		{
-			System.out.println("Invalid symbol. Retry.");
-			return false;
-		}
-		else if(x<1 || x>this.n || y<1 || y>this.n)
+		if(x<1 || x>this.n || y<1 || y>this.n)
 		{
 			System.out.println("Invalid index. Retry.");
 			return false;
@@ -111,7 +101,7 @@ class ttt_board implements board
 
 	public boolean win()
 	{
-		return (row() | column() | diagonal1() | diagonal2());
+		 return (row() | column() | diagonal1() | diagonal2());
 	}
 
 	public boolean is_Full()
@@ -164,11 +154,12 @@ class ttt_board implements board
 	}
 }
 
-class human implements player
+
+class player
 {
     int x;
     int y;
-    public void input(int[] position)
+    public void input()
     {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter x:");
@@ -176,20 +167,6 @@ class human implements player
         System.out.println("Enter y:");
         y = in.nextInt();
     }
-    public int get_x()
-    {
-        return x;
-    }
-    public int get_y()
-    {
-        return y;
-    }
-}
-
-class machine implements player
-{
-    int x;
-    int y;
     public void input(int[] position)
     {
         x = position[0];
@@ -203,4 +180,56 @@ class machine implements player
     {
         return y;
     }
+}
+
+
+public class game
+{
+	public static void main(String[] args) 
+	{
+		ttt_board tb = new ttt_board(3);
+		player p1 = new player();
+		player p2 = new player();
+           int p;
+           System.out.println("Enter 1 to play with machine and 2 to play with human:");
+           Scanner in = new Scanner(System.in);
+		p = in.nextInt();
+		boolean chance = true;
+		while(!tb.is_Full())
+		{
+		    if(chance)
+		    {
+		        if(p == 1)
+		        {
+		            int[] pos = new int[2];
+		            pos = tb.get_empty();
+		            p1.input(pos);
+		        }
+		        else
+		        {
+		            p1.input();
+		        }
+		        tb.insert(p1.get_x(),p1.get_y(),'X');
+		    }
+		    else
+		    {
+		        p2.input();
+		        tb.insert(p2.get_x(),p2.get_y(),'O');
+		    }
+		    tb.view();
+		    if(tb.win())
+		    {
+		        if(chance)
+		        {
+		            System.out.println("Player1 won!");
+		        }
+		        else
+		        {
+		            System.out.println("Player2 won!");
+		        }
+		        break;
+		    }
+		}
+	    System.out.println("Game Over!");
+	}
 }
