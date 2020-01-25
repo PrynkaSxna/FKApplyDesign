@@ -1,12 +1,21 @@
 package ttt;
 
+import java.util.Scanner; 
+
 interface board
 {
-     public boolean insert(int x, int y, char symbol);
+        public boolean insert(int x, int y, char symbol);
 	 public boolean win();	
 	 public boolean is_Full();
 	 public void view();
 } 
+
+interface player
+{
+    public void input(int[] position);
+    public int get_x();
+    public int get_y();
+}
 
 class ttt_board implements board
 {
@@ -134,4 +143,64 @@ class ttt_board implements board
 			System.out.println(' ');
 		}
 	}
+	
+	public int[] get_empty()
+	{
+		int i;
+		int j;
+		int[] position = new int[2];
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[i][j] == '\u0000')
+				{
+					position[0]=i;
+					position[1]=j;
+				}
+			}
+		}
+		return position;
+	}
+}
+
+class human implements player
+{
+    int x;
+    int y;
+    public void input(int[] position)
+    {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter x:");
+        x = in.nextInt();
+        System.out.println("Enter y:");
+        y = in.nextInt();
+    }
+    public int get_x()
+    {
+        return x;
+    }
+    public int get_y()
+    {
+        return y;
+    }
+}
+
+class machine implements player
+{
+    int x;
+    int y;
+    public void input(int[] position)
+    {
+        x = position[0];
+        y = position[1];
+    }
+    public int get_x()
+    {
+        return x;
+    }
+    public int get_y()
+    {
+        return y;
+    }
 }
