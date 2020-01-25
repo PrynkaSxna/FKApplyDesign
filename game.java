@@ -21,6 +21,11 @@ class ttt_board implements board
 	{
 		this.n = n;
 		t_board = new char[n][n];
+		for(int i=0; i<this.n; i++)
+		{
+		    for(int j=0; j<this.n; j++)
+		        t_board[i][j]='_';
+		}
 	}
 
 	public boolean insert(int x, int y, char symbol)
@@ -30,12 +35,12 @@ class ttt_board implements board
 			System.out.println("Invalid index. Retry.");
 			return false;
 		}
-		else if(t_board[x-1][y-1] != '\u0000')	
+		else if(t_board[x-1][y-1] != '_')	
 		{
 			System.out.println("Cell not empty. Retry");
 			return false;
 		}
-		t_board[x][y] = symbol;
+		t_board[x-1][y-1] = symbol;
 		return true;
 	}
 
@@ -47,11 +52,13 @@ class ttt_board implements board
 		{
 			for(j=1; j<this.n; j++)
 			{
-				if(this.t_board[i][j] != this.t_board[i][0])
+				if(this.t_board[i][j] != this.t_board[i][0] || this.t_board[i][0] == '_')
 					break;
 			}
 			if(j == this.n)
-				return true;
+			{
+			    return true;
+			}
 		}
 		return false;
 	}
@@ -60,15 +67,17 @@ class ttt_board implements board
 	{
 		int i;
 		int j;
-		for(i=0; i<this.n; i++)
+		for(i=1; i<this.n; i++)
 		{
-			for(j=1; j<this.n; j++)
+			for(j=0; j<this.n; j++)
 			{
-				if(this.t_board[j][i] != this.t_board[j][0])
+				if(this.t_board[j][i] != this.t_board[j][0] || this.t_board[j][0] == '_')
 					break;
 			}
 			if(j == this.n)
-				return true;
+			{
+			    return true;
+			}
 		}
 		return false;
 	}
@@ -78,6 +87,8 @@ class ttt_board implements board
 		int i;
 		for(i=1; i<this.n; i++)
 		{
+			if(this.t_board[0][0] == '_')
+			    return false;
 			if(this.t_board[i][i] != this.t_board[0][0])
 				return false;
 		}
@@ -87,14 +98,12 @@ class ttt_board implements board
 	private boolean diagonal2()
 	{
 		int i;
-		int j;
-		for(i=0; i<this.n; i++)
+		for(i=1; i<this.n; i++)
 		{
-			for(j=this.n-2; j<=0; j--)
-			{
-				if(this.t_board[i][j] != this.t_board[0][n-1])
-					return false;
-			}		
+			if(this.t_board[0][this.n-1] == '_')	
+			    return false;
+			if(this.t_board[i][n-i-1] != this.t_board[0][this.n-1])
+			    return false;
 		}
 		return true;
 	}
@@ -112,7 +121,7 @@ class ttt_board implements board
 		{
 			for(j=0; j<this.n; j++)
 			{
-				if(this.t_board[i][j] == '\u0000')
+				if(this.t_board[i][j] == '_')
 					return false;
 			}
 		}
@@ -143,7 +152,7 @@ class ttt_board implements board
 		{
 			for(j=0; j<this.n; j++)
 			{
-				if(this.t_board[i][j] == '\u0000')
+				if(this.t_board[i][j] == '_')
 				{
 					position[0]=i;
 					position[1]=j;
@@ -191,9 +200,10 @@ public class game
 		player p1 = new player();
 		player p2 = new player();
            int p;
-           System.out.println("Enter 1 to play with machine and 2 to play with human:");
-           Scanner in = new Scanner(System.in);
+        System.out.println("Enter 1 to play with machine and 2 to play with human:");
+        Scanner in = new Scanner(System.in);
 		p = in.nextInt();
+		System.out.println("Enter indexes in range 1-3.");
 		boolean chance = true;
 		while(!tb.is_Full())
 		{
@@ -229,6 +239,7 @@ public class game
 		        }
 		        break;
 		    }
+			chance = !chance;
 		}
 	    System.out.println("Game Over!");
 	}
