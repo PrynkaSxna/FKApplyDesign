@@ -5,10 +5,10 @@ import java.util.Scanner;
 
 interface board
 {
-    public boolean insert(int x, int y, char symbol);
-	 public boolean win();	
-	 public boolean is_Full();
-	 public void view();
+	public boolean insert(int x, int y, char symbol);
+	public boolean win();	
+	public boolean is_Full();
+	public void view();
 } 
 
 
@@ -163,14 +163,162 @@ class ttt_board implements board
 	}
 }
 
+class board9
+{
+	int n;
+	ttt_board[][] b9;
+	board9(int n)
+	{
+		this.n = n;
+		b9 = new ttt_board[n][n];
+		for(int i=0; i<this.n; i++)
+		{
+		    for(int j=0; j<this.n; j++)
+		        b9[i][j] = new ttt_board(this.n);
+		}
+	}
+
+	public boolean insert(int b1, int b2, int x, int y, char symbol)
+	{
+		if(b1<1 || b1>this.n || b2<1 || b2>this.n)
+		{
+			System.out.println("Invalid block index. Retry.");
+			return false;
+		}
+		return b9[b1-1][b2-1].insert(x,y,symbol);
+	}
+
+	private boolean row()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b9[i][j].win())
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean column()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b9[j][i].win())
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean diagonal1()
+	{
+		int i;
+		for(i=0; i<this.n; i++)
+		{
+			if(!b9[i][i].win())
+				return false;
+		}
+		return true;
+	}
+
+	private boolean diagonal2()
+	{
+		int i;
+		for(i=0; i<this.n; i++)
+		{
+			if(!b9[i][n-i-1].win())
+			    return false;
+		}
+		return true;
+	}
+
+	public boolean win()
+	{
+		 return (this.row() | this.column() | this.diagonal1() | this.diagonal2());
+	}
+
+	public boolean is_Full()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b9[i][j].is_Full())
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public void view()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				System.out.printf("Block %d %d\n",i,j);
+				b9[i][j].view();
+			}
+		}
+	}
+	
+	public int[] get_empty()
+	{
+		int i;
+		int j;
+		int[] position = new int[4];
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b9[i][j].is_Full())
+				{
+					int[] pos2 = b9[i][j].get_empty();
+					position[0]=i;
+					position[1]=j;
+					position[2]=pos2[0];
+					position[3]=pos2[1];
+					break;
+				}
+			}
+		}
+		return position;
+	}
+}
 
 class player
 {
+    int b1;
+    int b2;
     int x;
     int y;
     public void input()
     {
         Scanner in = new Scanner(System.in);
+        System.out.println("Enter b1:");
+        b1 = in.nextInt();
+        System.out.println("Enter b2:");
+        b2 = in.nextInt();
         System.out.println("Enter x:");
         x = in.nextInt();
         System.out.println("Enter y:");
@@ -178,8 +326,18 @@ class player
     }
     public void input(int[] position)
     {
-        x = position[0];
-        y = position[1];
+        b1 = position[0];
+        b2 = position[1];
+        x = position[2];
+        y = position[3];
+    }
+    public int get_b1()
+    {
+        return b1;
+    }
+    public int get_b2()
+    {
+        return b2;
     }
     public int get_x()
     {
@@ -196,22 +354,23 @@ public class game
 {
 	public static void main(String[] args) 
 	{
-		ttt_board tb = new ttt_board(3);
+		board9 tb = new board9(3);
 		player p1 = new player();
 		player p2 = new player();
            int p;
-        System.out.println("Enter 1 to play with machine and 2 to play with human:");
-        Scanner in = new Scanner(System.in);
+           System.out.println("Enter 1 to play with machine and 2 to play with human:");
+           Scanner in = new Scanner(System.in);
 		p = in.nextInt();
-		System.out.println("Enter indexes in range 1-3.");
+		System.out.println("Enter block indexes in range 1-3, followed by sub-block indexes in range 1-3.");
 		boolean chance = true;
 		while(!tb.is_Full())
 		{
 		    if(chance)
 		    {
+		        System.out.println("Player 1's chance.");
 		        if(p == 1)
 		        {
-		            int[] pos = new int[2];
+		            int[] pos = new int[4];
 		            pos = tb.get_empty();
 		            p1.input(pos);
 		        }
@@ -219,12 +378,13 @@ public class game
 		        {
 		            p1.input();
 		        }
-		        tb.insert(p1.get_x(),p1.get_y(),'X');
+		        tb.insert(p1.get_b1(),p1.get_b2(),p1.get_x(),p1.get_y(),'X');
 		    }
 		    else
 		    {
+		        System.out.println("Player 2's chance.");
 		        p2.input();
-		        tb.insert(p2.get_x(),p2.get_y(),'O');
+		        tb.insert(p2.get_b1(),p2.get_b2(),p2.get_x(),p2.get_y(),'O');
 		    }
 		    tb.view();
 		    if(tb.win())
