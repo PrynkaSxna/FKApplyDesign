@@ -84,6 +84,160 @@ class ttt_board implements board
 			return false;
 		}
 		else if(t_board[x-1][y-1] != '_' && symbol != '_')	
+<<<<<<< HEAD
+=======
+		{
+			System.out.println("Cell not empty. Retry");
+			return false;
+		}
+		t_board[x-1][y-1] = symbol;
+		return true;
+	}
+
+	private boolean row()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=1; j<this.n; j++)
+			{
+				if(this.t_board[i][j] != this.t_board[i][0] || this.t_board[i][0] == '_')
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean column()
+	{
+		int i;
+		int j;
+		for(i=1; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[j][i] != this.t_board[j][0] || this.t_board[j][0] == '_')
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean diagonal1()
+	{
+		int i;
+		for(i=1; i<this.n; i++)
+		{
+			if(this.t_board[0][0] == '_')
+			    return false;
+			if(this.t_board[i][i] != this.t_board[0][0])
+				return false;
+		}
+		return true;
+	}
+
+	private boolean diagonal2()
+	{
+		int i;
+		for(i=1; i<this.n; i++)
+		{
+			if(this.t_board[0][this.n-1] == '_')	
+			    return false;
+			if(this.t_board[i][n-i-1] != this.t_board[0][this.n-1])
+			    return false;
+		}
+		return true;
+	}
+
+	public boolean win()
+	{
+		 return (row() | column() | diagonal1() | diagonal2());
+	}
+
+	public boolean is_Full()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[i][j] == '_')
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public void view()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				System.out.print(this.t_board[i][j]);	
+				System.out.print(' ');
+			}
+			System.out.println(' ');
+		}
+	}
+	
+	public int[] get_empty()
+	{
+		int i;
+		int j;
+		int[] position = new int[2];
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[i][j] == '_')
+				{
+					position[0]=i;
+					position[1]=j;
+				}
+			}
+		}
+		return position;
+	}
+}
+
+class board4
+{
+	int n;
+	char[][] t_board;
+
+	ttt_board(int n)
+	{
+		this.n = n;
+		t_board = new char[n][n];
+		for(int i=0; i<this.n; i++)
+		{
+		    for(int j=0; j<this.n; j++)
+		        t_board[i][j]='_';
+		}
+	}
+
+	public boolean insert(int x, int y, char symbol)
+	{
+		if(x<1 || x>this.n || y<1 || y>this.n)
+		{
+			System.out.println("Invalid index. Retry.");
+			return false;
+		}
+		else if(t_board[x-1][y-1] != '_' && symbol != '_')	
+>>>>>>> dev
 		{
 			System.out.println("Cell not empty. Retry");
 			return false;
@@ -353,6 +507,155 @@ class board9
 		return position;
 	}
 }
+<<<<<<< HEAD
+=======
+
+class board27
+{
+	int n;
+	board9[][] b27;
+	board9(int n)
+	{
+		this.n = n;
+		b27 = new board9[n][n];
+		for(int i=0; i<this.n; i++)
+		{
+		    for(int j=0; j<this.n; j++)
+		        b27[I][j] = new board9(this.n);
+		}
+	}
+
+	public boolean insert(int t1, int t2, int b1, int b2, int x, int y, char symbol)
+	{
+		if(t1<1 || t1>this.n || t2<1 || t2>this.n)
+		{
+			System.out.println("Invalid block 9 index. Retry.");
+			return false;
+		}
+		return b27[t1-1][t2-1].insert(b1,b2,x,y,symbol);
+	}
+
+	private boolean row()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b27[i][j].win())
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean column()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b27[j][I].win())
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean diagonal1()
+	{
+		int i;
+		for(i=0; i<this.n; i++)
+		{
+			if(!b27[i][i].win())
+				return false;
+		}
+		return true;
+	}
+
+	private boolean diagonal2()
+	{
+		int i;
+		for(i=0; i<this.n; i++)
+		{
+			if(!b27[i][n-i-1].win())
+			    return false;
+		}
+		return true;
+	}
+
+	public boolean win()
+	{
+		 return (this.row() | this.column() | this.diagonal1() | this.diagonal2());
+	}
+
+	public boolean is_Full()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b27[I][j].is_Full())
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public void view()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				System.out.printf("Block %d %d\n",i,j);
+				b9[i][j].view();
+			}
+		}
+	}
+	
+	public int[] get_empty()
+	{
+		int i;
+		int j;
+		int[] position = new int[6];
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(!b27[I][j].is_Full())
+				{
+					int[] pos2 = b27[I][j].get_empty();
+					position[0]=i;
+					position[1]=j;
+					position[2]=pos2[0];
+					position[3]=pos2[1];
+					position[4]=pos2[2];
+					position[5]=pos2[3];
+					break;
+				}
+			}
+		}
+		return position;
+	}
+}
+
+>>>>>>> dev
 
 class player
 {
