@@ -211,6 +211,157 @@ class ttt_board implements board
 	}
 }
 
+class board4
+{
+	int n;
+	char[][] t_board;
+
+	ttt_board(int n)
+	{
+		this.n = n;
+		t_board = new char[n][n];
+		for(int i=0; i<this.n; i++)
+		{
+		    for(int j=0; j<this.n; j++)
+		        t_board[i][j]='_';
+		}
+	}
+
+	public boolean insert(int x, int y, char symbol)
+	{
+		if(x<1 || x>this.n || y<1 || y>this.n)
+		{
+			System.out.println("Invalid index. Retry.");
+			return false;
+		}
+		else if(t_board[x-1][y-1] != '_' && symbol != '_')	
+		{
+			System.out.println("Cell not empty. Retry");
+			return false;
+		}
+		t_board[x-1][y-1] = symbol;
+		return true;
+	}
+
+	private boolean row()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=1; j<this.n; j++)
+			{
+				if(this.t_board[i][j] != this.t_board[i][0] || this.t_board[i][0] == '_')
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean column()
+	{
+		int i;
+		int j;
+		for(i=1; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[j][i] != this.t_board[j][0] || this.t_board[j][0] == '_')
+					break;
+			}
+			if(j == this.n)
+			{
+			    return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean diagonal1()
+	{
+		int i;
+		for(i=1; i<this.n; i++)
+		{
+			if(this.t_board[0][0] == '_')
+			    return false;
+			if(this.t_board[i][i] != this.t_board[0][0])
+				return false;
+		}
+		return true;
+	}
+
+	private boolean diagonal2()
+	{
+		int i;
+		for(i=1; i<this.n; i++)
+		{
+			if(this.t_board[0][this.n-1] == '_')	
+			    return false;
+			if(this.t_board[i][n-i-1] != this.t_board[0][this.n-1])
+			    return false;
+		}
+		return true;
+	}
+
+	public boolean win()
+	{
+		 return (row() | column() | diagonal1() | diagonal2());
+	}
+
+	public boolean is_Full()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[i][j] == '_')
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public void view()
+	{
+		int i;
+		int j;
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				System.out.print(this.t_board[i][j]);	
+				System.out.print(' ');
+			}
+			System.out.println(' ');
+		}
+	}
+	
+	public int[] get_empty()
+	{
+		int i;
+		int j;
+		int[] position = new int[2];
+		for(i=0; i<this.n; i++)
+		{
+			for(j=0; j<this.n; j++)
+			{
+				if(this.t_board[i][j] == '_')
+				{
+					position[0]=i;
+					position[1]=j;
+				}
+			}
+		}
+		return position;
+	}
+}
+
 class board9
 {
 	int n;
