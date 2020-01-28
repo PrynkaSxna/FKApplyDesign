@@ -10,6 +10,37 @@ interface board
 	public void view();
 } 
 
+class leader_board
+{
+    private static leader_board obj = null;
+    public int score1;
+    public int score2;
+    private leader_board()
+    {
+        score1 = 0;
+        score2 = 0;
+    }
+    public static leader_board get()
+    {
+        if(Objects.isNull(obj))
+        {
+            obj = new leader_board();
+        }
+        return obj;
+    }
+    public void update(int m)
+    {
+        if(m==1)
+            score1++;
+        else
+            score2++;
+    }
+    public void display()
+    {
+        System.out.printf("Player 1 has won %d matches and player 2 has won %d matches.\n",score1,score2);
+    }
+}
+
 class board_state
 {
     int m;
@@ -376,6 +407,7 @@ public class game
 		board9 tb = new board9(3);
 		player p1 = new player();
 		player p2 = new player();
+		leader_board lb = leader_board.get();
            int p;
            System.out.println("Enter 1 to play with machine and 2 to play with human:");
            Scanner in = new Scanner(System.in);
@@ -437,15 +469,19 @@ public class game
 		        if(chance)
 		        {
 		            System.out.println("Player1 won!");
+		            lb.update(1);
+		            
 		        }
 		        else
 		        {
 		            System.out.println("Player2 won!");
+		            lb.update(2);
 		        }
 		        break;
 		    }
 			chance = !chance;
 		}
 	    System.out.println("Game Over!");
+	    lb.display();
 	}
 }
