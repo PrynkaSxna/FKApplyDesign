@@ -84,8 +84,7 @@ class ttt_board implements board
 			return false;
 		}
 		else if(t_board[x-1][y-1] != '_' && symbol != '_')	
-<<<<<<< HEAD
-=======
+
 		{
 			System.out.println("Cell not empty. Retry");
 			return false;
@@ -237,7 +236,7 @@ class board4
 			return false;
 		}
 		else if(t_board[x-1][y-1] != '_' && symbol != '_')	
->>>>>>> dev
+
 		{
 			System.out.println("Cell not empty. Retry");
 			return false;
@@ -507,8 +506,6 @@ class board9
 		return position;
 	}
 }
-<<<<<<< HEAD
-=======
 
 class board27
 {
@@ -655,7 +652,6 @@ class board27
 	}
 }
 
->>>>>>> dev
 
 class player
 {
